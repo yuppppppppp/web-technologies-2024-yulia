@@ -1,4 +1,4 @@
-@import url('assets/style/fonts.css');
+@import url('fonts.css');
 
 * {
     font-family: 'Inter', sans-serif;
@@ -81,14 +81,31 @@
     margin: 0 auto;
 }
 
-/* Фон для формы на странице контакты */
-.contact-form {
-    background-image: url('фон.jpg');
-    background-size: cover;
-    background-position: center;
-    padding: 40px;
-    border-radius: 10px;
-    margin: 30px 0;
+/* Фон формы */
+form {
+  background-image: url('../img/фон.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 30px;
+  border-radius: 20px;
+  min-height: 300px;
+  position: relative;
+  overflow: hidden; 
+}
+
+form::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45); 
+  border-radius: 20px;
+  z-index: 0;
+}
+
+form * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Хлебные крошки */
