@@ -1,6 +1,3 @@
-
-/* ГЛОБАЛЬНЫЕ СТИЛИ */
-
 * {
   margin: 0;
   padding: 0;
@@ -8,36 +5,56 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', Arial, sans-serif;
   color: #202020;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #F5F6F8;
+  background-color: #fff;
+  font-weight: 400;
 }
 
 /* ШАПКА */
+.mobile-menu_icon {
+  display: none;
+  cursor: pointer;
+}
+
+.mobile-menu_icon img {
+  width: 24px;
+  height: 24px;
+}
 
 .site-header {
-  background-color: #F5F6F8;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   padding: 20px 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: fixed;
+  top: 24px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .header-card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-width: 1124px;
-  width: 90%;
-  padding: 10px 30px;
   display: flex;
-  justify-content: space-between;
+  padding: 16px 24px;
+  height: 56px;
+  width: 1124px;
+  max-width: 90%;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  box-shadow: 3px 3px 5px rgb(199, 197, 197);
   align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.logo {
+  color: #2D66EE;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 /* левая часть: логотип + меню */
@@ -47,23 +64,30 @@ body {
   gap: 50px;
 }
 
-.logo {
-  font-size: 18px;
-  font-weight: 700;
-  color: #2D66EE;
-}
-
 /* навигация */
 .main-nav ul {
   list-style: none;
   display: flex;
-  gap: 25px;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav li {
+  font-size: 14px;
+  color: #101828;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.main-nav li:hover {
+  color: #2D66EE;
 }
 
 .main-nav a {
   text-decoration: none;
-  color: #000;
-  font-size: 15px;
+  color: #101828;
+  font-size: 14px;
   font-weight: 500;
   transition: color 0.2s ease;
 }
@@ -75,127 +99,140 @@ body {
 /* правая часть: телефоны и почта */
 .header-right {
   display: flex;
+  gap: 32px;
   align-items: center;
-  gap: 30px;
 }
 
 .contact-block {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .contact-block img {
-  width: 18px;
-  height: auto;
+  width: 24px;
+  height: 24px;
 }
 
 .contact-block p,
 .contact-block a {
   font-size: 14px;
-  font-weight: 500;
   color: #2D66EE;
+  font-weight: 500;
   text-decoration: none;
+  margin: 0;
 }
 
 .contact-block a:hover {
   text-decoration: underline;
 }
 
-/* ПЕРВЫЙ ЭКРАН (HERO SECTION)*/
-
+/* ПЕРВЫЙ ЭКРАН (HERO SECTION) */
 .hero {
-  position: relative;
-  background-color: #f8f9fb;
+  height: 900px;
+  color: #101828;
+  background-color: #F2F4F7;
   background-image: url('../src/assets/img/hero-bg.png');
+  background-size: 60% auto;
   background-repeat: no-repeat;
-  background-position: right -100px top -100px; 
-  background-size: 900px auto;
-  padding: 160px 0 120px;
-  overflow: visible;
-}
-
-/* контейнер секции */
-.hero-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 1100px;
-  margin-left: 120px;
+  background-position: right center;
   position: relative;
-  z-index: 1;
+  overflow: visible;
+  padding-top: 80px;
 }
 
-/* текст */
+@media (max-width: 1440px) {
+  .hero {
+    background-size: auto auto;
+  }
+}
+
+/* текстовый блок */
+.hero-text {
+  position: absolute;
+  top: 180px;
+  margin-left: 108px;
+  width: 600px;
+}
+
 .hero-text h2 {
-  font-size: 44px;
+  font-size: 36px;
   font-weight: 700;
   line-height: 1.3;
-  color: #0a0a0a;
   margin-bottom: 20px;
-  max-width: 700px;
 }
 
 .hero-text span {
-  color: #2D66EE;
+  color: #306FF5;
 }
 
 .hero-text p {
-  color: #333;
-  font-size: 16px;
-  max-width: 600px;
-  margin-bottom: 40px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #101828;
 }
 
-/* форма */
+/* форма консультации */
 .hero-form {
-  background-color: #fff;
+  width: 676px;
+  height: 186px;
+  position: absolute;
+  top: 494px;
+  left: 108px;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 30px 40px;
-  width: 700px;
+  background-color: #FFFFFF;
+  padding: 24px;
+  box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.1);
 }
 
 .hero-form h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #1a1a1a;
+  font-size: 20px;
+  margin-top: 0;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 30px;
 }
 
-/* поля и кнопка */
+/* форма и её элементы */
 .hero-form form {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
 }
 
-/* поля */
 .hero-form label {
   display: flex;
   flex-direction: column;
-  font-size: 12px;
-  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  color: #667085;
   flex: 1;
 }
 
 .hero-form input {
   border: none;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgb(183, 182, 182);
   padding: 8px 0;
-  font-size: 14px;
+  font-size: 17px;
+  font-weight: 400;
   outline: none;
 }
 
-/* кнопка */
+.hero-form input::placeholder {
+  color: #101828;
+}
+
 .hero-form button {
+  width: 132px;
+  height: 58px;
+  border-radius: 8px;
+  border: none;
   background-color: #2D66EE;
-  color: white;
+  color: #FFFFFF;
   font-size: 14px;
   font-weight: 500;
-  border: none;
-  border-radius: 6px;
-  padding: 14px 24px;
+  text-align: left;
+  padding-left: 24px;
   cursor: pointer;
   flex-shrink: 0;
   transition: background-color 0.2s;
@@ -205,8 +242,129 @@ body {
   background-color: #1f4fb5;
 }
 
-/* ПОДВАЛ */
+/* Заголовок второго блока */
+.dev-header {
+  max-width: 1124px;
+  margin: 0 auto 40px;
+  padding: 0;
+}
 
+.dev-header p {
+  margin-bottom: 0;
+}
+
+/* ВТОРОЙ ЭКРАН */
+.development-cycle {
+  background-color: #fff;
+  padding: 60px 108px 120px 108px;
+  max-width: 100%;
+  margin: 0;
+}
+
+.development-cycle-container {
+  max-width: 1124px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 100px;
+  align-items: flex-start;
+}
+
+/* Левая колонка */
+.left-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.development-cycle h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0a0a0a;
+  margin-bottom: 24px;
+}
+
+.development-cycle > p {
+  font-size: 15px;
+  color: #0a0a0a;
+  margin-bottom: 60px;
+  font-weight: 400;
+}
+
+/* Технологии */
+.technologies {
+  margin-bottom: 0;
+}
+
+.technologies h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #0a0a0a;
+  margin-top: 50px;
+}
+
+.technologies h3:first-child {
+  margin-top: 0;
+}
+
+.technologies p {
+  font-size: 14px;
+  color: #333;
+  line-height: 2;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+
+/* Правая колонка - направления */
+.directions {
+  margin-left: 0;
+  padding-top: 0;
+  margin-top: -111px;
+}
+
+.directions ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.directions li {
+  font-size: 15px;
+  color: #0a0a0a;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+/* Синие стрелочки */
+.directions li::after {
+  content: "›";
+  color: #2D66EE;
+  font-size: 16px;
+  margin-left: 4px;
+  transition: color 0.2s ease;
+}
+
+/* Hover эффект */
+.directions li:hover {
+  font-weight: 700;
+  border-bottom: 2px solid #2D66EE;
+  padding-bottom: 2px;
+}
+
+.directions li:hover::after {
+  color: #2D66EE;
+}
+
+/* ПОДВАЛ */
 .site-footer {
   background-color: #fff;
   display: flex;
@@ -229,37 +387,36 @@ body {
 /* заголовок */
 .footer-card h2 {
   text-align: center;
-  font-size: 24px;
+  font-size: 36px;
   font-weight: 700;
+  margin-top: 0;
   margin-bottom: 40px;
 }
 
 /* блок с 4 колонками */
 .footer-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-around;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 30px;
-  margin-bottom: 30px;
+  margin: 10px 0;
 }
 
 /* каждая колонка */
 .footer-col {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 8px;
   flex: 1;
   min-width: 220px;
 }
 
 .footer-col img {
-  width: 24px;
-  height: 24px;
-  opacity: 0.9;
+  width: auto;
+  height: auto;
 }
 
-Ангелиночка(солнышко), [28.11.2025 20:32]
 /* текстовые блоки */
 .footer-text-block {
   display: flex;
@@ -271,12 +428,14 @@ body {
   font-size: 13px;
   color: #98A2B3;
   margin-bottom: 2px;
+  font-weight: 500;
 }
 
 .footer-text {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: #FFFFFF;
+  margin-top: 0;
 }
 
 /* нижняя строка */
@@ -285,9 +444,10 @@ body {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 13px;
   color: #98A2B3;
   opacity: 0.9;
+  font-weight: 400;
 }
 
 .footer-bottom img {
@@ -302,4 +462,369 @@ section {
 hr {
   border: none;
   border-top: 1px solid #ccc;
+}
+
+/* АДАПТИВ ДЛЯ 768px */
+@media (max-width: 768px) {
+  .site-header {
+    top: 12px;
+  }
+
+  .header-card {
+    padding: 12px 20px;
+    height: auto;
+    max-width: 95%;
+    justify-content: space-between;
+  }
+
+  .mobile-menu_icon {
+    display: block;
+  }
+
+  .mobile-menu_icon img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-left {
+    gap: 12px;
+    flex: none;
+    display: contents;
+    align-items: center;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .logo {
+    position: static;
+    left: auto;
+    transform: none;
+    font-size: 18px;
+    margin: 0 auto;
+  }
+
+  .header-right {
+    gap: 0;
+    flex: none;
+  }
+
+  .header-right .contact-block:first-child {
+    display: none;
+  }
+
+  .contact-block {
+    margin-right: 0;
+  }
+
+  .contact-block a {
+    font-size: 12px;
+  }
+
+  .contact-block p {
+    display: none;
+  }
+
+  /* Hero section для 768px */
+  .hero {
+    height: auto;
+    min-height: 600px;
+    background-size: 50% auto;
+    background-position: right 50px;
+    padding: 120px 20px 40px;
+  }
+
+  .hero-container {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-text {
+    position: static;
+    margin: 0;
+    width: 100%;
+    max-width: 350px;
+    text-align: left;
+    z-index: 2;
+  }
+
+  .hero-text h2 {
+    font-size: 24px;
+  }
+
+  .hero-text p {
+    font-size: 14px;
+  }
+
+  .hero-form {
+    position: static;
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    margin: 190px auto 0;
+  }
+
+  .hero-form h3 {
+    font-size: 18px;
+  }
+
+  .hero-form form {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .hero-form label {
+    flex: 1 1 45%;
+    min-width: 200px;
+  }
+
+  .hero-form button {
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+  }
+
+  /* Development cycle для 768px */
+  .development-cycle {
+    padding: 60px 20px;
+  }
+
+  .development-cycle h2 {
+    font-size: 26px;
+  }
+
+  .development-cycle > p {
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .technologies h3 {
+    font-size: 15px;
+    margin-top: 24px;
+  }
+
+  .technologies p {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .directions li {
+    font-size: 14px;
+  }
+
+  .directions ul {
+    gap: 18px;
+  }
+
+  .development-cycle-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  /* Footer для 768px */
+  .footer-card {
+    padding: 30px 20px;
+  }
+
+  .footer-card h2 {
+    font-size: 28px;
+  }
+
+  .footer-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .footer-col {
+    min-width: calc(50% - 10px);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .footer-col img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer-label {
+    font-size: 11px;
+  }
+
+  .footer-text {
+    font-size: 14px;
+  }
+}
+
+/* АДАПТИВ ДЛЯ 425px */
+@media (max-width: 425px) {
+  .site-header {
+    top: 8px;
+  }
+
+  .header-card {
+    padding: 12px 16px;
+    max-width: 95%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-left {
+    gap: 12px;
+    flex: none;
+  }
+
+  .logo {
+    font-size: 16px;
+    position: static;
+    transform: none;
+    margin: 0 auto;
+  }
+
+  /* Hero section для 425px */
+  .hero {
+    min-height: auto;
+    height: auto;
+    background-image: url('./src/assets/img/hero-bg.png');
+    background-size: 100%;
+    background-position: center 320px;
+    padding: 80px 16px 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .hero-text {
+    width: 100%;
+    text-align: left;
+    order: 1;
+    margin-bottom: 30px;
+    position: static;
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .hero-text h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .hero-text p {
+    font-size: 14px;
+  }
+
+  .hero-container::after {
+    content: '';
+    order: 2;
+    width: 100%;
+    height: 220px;
+    background-image: url('./src/assets/img/hero-bg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: 20px;
+  }
+
+  .hero-form {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    order: 3;
+    padding: 20px;
+    top: auto;
+    left: auto;
+  }
+
+  .hero-form h3 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .hero-form form {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero-form label {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .hero-form button {
+    width: 100%;
+    height: 48px;
+  }
+
+  /* Development cycle для 425px */
+  .development-cycle {
+    padding: 40px 16px;
+  }
+
+  .development-cycle h2 {
+    font-size: 24px;
+  }
+
+  .development-cycle-container {
+    gap: 30px;
+  }
+
+  .technologies h3 {
+    font-size: 15px;
+    margin-top: 24px;
+  }
+
+  .technologies p {
+    font-size: 13px;
+  }
+
+  .directions ul {
+    gap: 16px;
+  }
+
+  .directions li {
+    font-size: 14px;
+  }
+
+  /* Footer для 425px */
+  .footer-card {
+    padding: 24px 16px;
+  }
+
+  .footer-card h2 {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+
+  .footer-label {
+    font-size: 12px;
+  }
+
+  .footer-text {
+    font-size: 15px;
+  }
+
+  section {
+    padding: 40px 16px;
+  }
+
+  .footer-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-col {
+    min-width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
 }
