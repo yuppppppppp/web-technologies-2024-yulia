@@ -1,0 +1,305 @@
+
+/* ГЛОБАЛЬНЫЕ СТИЛИ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #202020;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #F5F6F8;
+}
+
+/* ШАПКА */
+
+.site-header {
+  background-color: #F5F6F8;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 1124px;
+  width: 90%;
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* левая часть: логотип + меню */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2D66EE;
+}
+
+/* навигация */
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #000;
+  font-size: 15px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: #2D66EE;
+}
+
+/* правая часть: телефоны и почта */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.contact-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-block img {
+  width: 18px;
+  height: auto;
+}
+
+.contact-block p,
+.contact-block a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2D66EE;
+  text-decoration: none;
+}
+
+.contact-block a:hover {
+  text-decoration: underline;
+}
+
+/* ПЕРВЫЙ ЭКРАН (HERO SECTION)*/
+
+.hero {
+  position: relative;
+  background-color: #f8f9fb;
+  background-image: url('../src/assets/img/hero-bg.png');
+  background-repeat: no-repeat;
+  background-position: right -100px top -100px; 
+  background-size: 900px auto;
+  padding: 160px 0 120px;
+  overflow: visible;
+}
+
+/* контейнер секции */
+.hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 1100px;
+  margin-left: 120px;
+  position: relative;
+  z-index: 1;
+}
+
+/* текст */
+.hero-text h2 {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #0a0a0a;
+  margin-bottom: 20px;
+  max-width: 700px;
+}
+
+.hero-text span {
+  color: #2D66EE;
+}
+
+.hero-text p {
+  color: #333;
+  font-size: 16px;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+/* форма */
+.hero-form {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 30px 40px;
+  width: 700px;
+}
+
+.hero-form h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+/* поля и кнопка */
+.hero-form form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* поля */
+.hero-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  color: #666;
+  flex: 1;
+}
+
+.hero-form input {
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 8px 0;
+  font-size: 14px;
+  outline: none;
+}
+
+/* кнопка */
+.hero-form button {
+  background-color: #2D66EE;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  padding: 14px 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+.hero-form button:hover {
+  background-color: #1f4fb5;
+}
+
+/* ПОДВАЛ */
+
+.site-footer {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 0;
+}
+
+/* карточка подвала */
+.footer-card {
+  background-color: #101828;
+  border-radius: 12px;
+  padding: 40px 60px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 1224px;
+  color: white;
+}
+
+/* заголовок */
+.footer-card h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+/* блок с 4 колонками */
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* каждая колонка */
+.footer-col {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-col img {
+  width: 24px;
+  height: 24px;
+  opacity: 0.9;
+}
+
+Ангелиночка(солнышко), [28.11.2025 20:32]
+/* текстовые блоки */
+.footer-text-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-label {
+  font-size: 13px;
+  color: #98A2B3;
+  margin-bottom: 2px;
+}
+
+.footer-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* нижняя строка */
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #98A2B3;
+  opacity: 0.9;
+}
+
+.footer-bottom img {
+  width: 24px;
+  height: 24px;
+}
+
+section {
+  padding: 80px 40px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+}

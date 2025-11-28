@@ -4,60 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Практика 3</title>
+    <title>Практика 4</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <header class="site-header">
-        <div class="logo">
-            <h1>IT WEBSITE</h1>
-        </div>
+        <div class="header-card">
+            <div class="header-left">
+                <h1 class="logo">IT WEBSITE</h1>
 
-        <nav class="main-nav">
-            <ul>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Media</a></li>
-                <li><a href="#">Cases</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Contacts</a></li>
-            </ul>
-        </nav>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Media</a></li>
+                        <li><a href="#">Cases</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contacts</a></li>
+                    </ul>
+                </nav>
+            </div>
 
-        <div class="contacts">
-            <p> +7 (111) 111-11-11 +7 (111) 111-11-11</p>
-            <p><a href="mailto:itcompany@mail.com">itcompany@mail.com</a></p>
+            <div class="header-right">
+                <div class="contact-block">
+                    <img src="../src/assets/icons/phone_color.png" alt="phone">
+                    <p>+7 (111) 111 11 11</p>
+                    <p>+7 (111) 111 11 11</p>
+                </div>
+
+                <div class="contact-block">
+                    <img src="../src/assets/icons/letter_color.png" alt="mail">
+                    <a href="mailto:itcompany@mail.com">itcompany@mail.com</a>
+                </div>
+            </div>
         </div>
     </header>
 
 
+
     <section class="hero">
-        <div class="hero-text">
-            <h2>Development of <b>mobile applications</b> and <b>web services</b> of any complexity</h2>
-            <p>We create mobile applications for iOS, Android that transfer your business to mobile applications on your
-                customers' devices.</p>
-        </div>
+        <div class="hero-container">
 
-        <div class="hero-form">
-            <h3>Leave your contacts and we will call you back within 30 minutes</h3>
+            <div class="hero-text">
+                <h2>
+                    Development of <span>mobile applications</span> and <span>web services</span> of any complexity
+                </h2>
+                <p>
+                    We create mobile applications for iOS, Android that transfer your business to mobile applications
+                    of your customers' devices.
+                </p>
+            </div>
 
-            <form>
-                <label>
-                    Phone number:<br>
-                    <input type="tel" name="phone" placeholder="+7 (111) 111-11-11">
-                </label>
-                <br><br>
+            <div class="hero-form">
+                <h3>Leave your contacts and we will call you back within 30 minutes</h3>
 
-                <label>
-                    Full name:<br>
-                    <input type="text" name="fullname" placeholder="Иван Иванов">
-                </label>
-                <br><br>
+                <form>
+                    <label>
+                        <span>Phone number</span>
+                        <input type="tel" name="phone" placeholder="+7 (111) 111-11-11">
+                    </label>
 
-                <button type="submit">Get consultation</button>
-            </form>
+                    <label>
+                        <span>Full name</span>
+                        <input type="text" name="fullname" placeholder="Иван Иванов">
+                    </label>
+
+                    <button type="submit">Get consultation</button>
+                </form>
+            </div>
         </div>
     </section>
+
 
     <hr>
 
@@ -106,7 +124,8 @@
                 <li>Restaurants, food delivery</li>
                 <li>Marketplaces</li>
 
-                <li>AR technology</li>
+
+<li>AR technology</li>
                 <li>TV series</li>
                 <li>Startups</li>
                 <li>Religion</li>
@@ -122,8 +141,7 @@
         <p>Our software development company is truly proud of the wonderful clients we have worked with. We enjoy a
             long-term partnership.</p>
 
-Ангелиночка(солнышко), [28.11.2025 19:09]
-<div class="projects-list">
+        <div class="projects-list">
             <ul>
                 <li>I-teka</li>
                 <li>Dauletten</li>
@@ -226,7 +244,7 @@
                 <p>We design the application page and publish it in the App Store and Google Play stores.</p>
             </article>
 
-            <article class="stage">
+<article class="stage">
                 <h3>Support</h3>
                 <p>We monitor the stability of the application, update it for new devices and versions of iOS and
                     Android.</p>
@@ -242,8 +260,7 @@
             <p>Thousand is a full-cycle digital production company with its own product analytics, design, web and
                 mobile development.</p>
 
-Ангелиночка(солнышко), [28.11.2025 19:09]
-<ul class="team-stats">
+            <ul class="team-stats">
                 <li>
                     <strong>28</strong>
                     <span>team members</span>
@@ -346,16 +363,47 @@
     <hr>
 
     <footer class="site-footer">
-        <h2>IT WEBSITE</h2>
+        <div class="footer-card">
+            <h2>IT WEBSITE</h2>
 
-        <div class="footer-content">
-            <ul>
-                <li><b>Contact nums:</b> +7 (778) 395 90 26</li>
-                <li><b>Post:</b> mail@mail.com</li>
-                <li><b>Address:</b> City city, street st. 90</li>
-                <li><b>Leave a request:</b> Leave a request</li>
-            </ul>
-            <p>We work throughout world</p>
+<div class="footer-row">
+                <div class="footer-col">
+                    <img src="../src/assets/icons/phone.png" alt="phone">
+                    <div class="footer-text-block">
+                        <p class="footer-label">Contact nums</p>
+                        <p class="footer-text">+7 (778) 395 90 26</p>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <img src="../src/assets/icons/letter.png" alt="mail">
+                    <div class="footer-text-block">
+                        <p class="footer-label">Post</p>
+                        <p class="footer-text">mail@mail.com</p>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <img src="../src/assets/icons/geo.png" alt="address">
+                    <div class="footer-text-block">
+                        <p class="footer-label">Address</p>
+                        <p class="footer-text">City city, steet st. 90</p>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <img src="../src/assets/icons/doc.png" alt="request">
+                    <div class="footer-text-block">
+                        <p class="footer-label">Leave a request</p>
+                        <p class="footer-text">Leave a request</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <img src="../src/assets/icons/cloud.png" alt="cloud">
+                <p>We work throughout world</p>
+            </div>
         </div>
     </footer>
 
