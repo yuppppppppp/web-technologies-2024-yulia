@@ -11,6 +11,21 @@
     font-size: 12px;
 }
 
+body {
+    background: url('фон.png') center/cover fixed no-repeat;
+}
+
+/* Классы для фонов после нажатия */
+.tic-tac-toe__ceil.x-move {
+    background-image: url('x-image.png');
+    background-size: 100% 100%;
+}
+
+.tic-tac-toe__ceil.o-move {
+    background-image: url('o-image.png');
+    background-size: 100% 100%;
+}
+
 @media (min-width: 576px) {
     .tic-tac-toe-wrapper {
         font-size: 16px;
@@ -28,7 +43,7 @@
     grid-template-rows: 1fr 1fr 1fr;
     gap: .5em;
     padding: .5em;
-    border: 1px solid black;
+    border: 1px solid rgb(226, 190, 190);
     aspect-ratio: 1;
 }
 
@@ -43,5 +58,79 @@
 
 /* Current move */
 .tic-tac-toe__current-move {
-    font-size: 2em;
+    font-size: 18px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family: 'Arial Black', sans-serif;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #e00,
+        0 0 30px #e00,
+        0 0 40px #e00;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+.button {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #5a11119c 0%, #e90c0583 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.stranger-things {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family: 'Arial Black', sans-serif;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #e00,
+        0 0 30px #e00,
+        0 0 40px #e00;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 
+            0 0 10px #070000,
+            0 0 15px #0f0101,
+            0 0 20px rgb(107, 3, 3),
+            0 0 30px #f16666,
+            0 0 40px rgb(107, 3, 3),
+            0 0 50px #f16666,
+            0 0 60px rgb(107, 3, 3);
+    }
+    to {
+        text-shadow: 
+            0 0 10px #1a0101,
+            0 0 20px #410404,
+            0 0 30px #4b0505,
+            0 0 40px #f80202,
+            0 0 50px #470808,
+            0 0 60px #f80202,
+            0 0 70px #4b0808,
+            0 0 80px #f80202;
+    }
 }

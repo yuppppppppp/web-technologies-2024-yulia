@@ -10,15 +10,13 @@ function init() {
     const moveEl = document.getElementById('move-value')
     
     const onMove = (isXTurn) => {
-        let currentMove
         
         if (isXTurn) {
-            currentMove = 'X'
+            moveEl.innerText = 'Vecna(X)'
         } else {
-            currentMove = 'O'
+            moveEl.innerText = '  Max(O)'
         }
 
-        moveEl.innerText = currentMove
     }
 
     const game = TicTacToe.init(
