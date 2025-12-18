@@ -10,3 +10,70 @@
 .test {
     color: red !important;
 }
+
+body {
+  background-color: #000000; 
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #ffffff; 
+}
+
+#game {
+  border-collapse: collapse;
+  margin: 20px auto;
+  background-color: #111111; 
+  border: 2px solid #0e0a0a; 
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #222222; 
+  background-color: #000000;
+}
+
+.snakeHead {
+  background-color: #4CAF50;
+  border-radius: 4px;
+}
+
+.snakeBody {
+  background-color: #4CAF50; 
+  border-radius: 3px;
+}
+
+.food {
+    border-radius: 50%;
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 auto;
+}
+
+.food::after {
+    content: "\1F34E"; /* Unicode для 🍎 */
+}
+
+.menuButton {
+  display: inline-block;
+  background-color: #696565; 
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 25px;
+  margin: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+
+.menuButton:hover {
+  transform: scale(1.08);
+  background-color: #db1414; 
+}
+
+.menuButton.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
