@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор пиццы</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <h1>Бобо Пицца</h1>
+        
+        <div class="pizza-stage">
+            <div class="pizza-img active" id="img-Маргарита">
+                <img src=C:\Users\Admin\Desktop\WEB\web-technologies-2024\src\images\Маргарита.png alt="Маргарита" class="pizza-image">
+            </div>
+            <div class="pizza-img" id="img-Пепперони">
+                <img src=C:\Users\Admin\Desktop\WEB\web-technologies-2024\src\images\Пепперони.png alt="Пепперони" class="pizza-image">
+            </div>
+            <div class="pizza-img" id="img-Баварская">
+                <img src=C:\Users\Admin\Desktop\WEB\web-technologies-2024\src\images\Баварская.png alt="Баварская" class="pizza-image">
+            </div>
+        </div>
+
+        <div class="group" id="typeGroup">
+            <div class="group-title">Выберите пиццу:</div>
+            <div class="pills">
+                <div class="pill active" data-value="Маргарита">
+                    <span class="pill-emoji"></span>
+                    Маргарита
+                    <span class="pill-price">500 ₽</span>
+                </div>
+                <div class="pill" data-value="Пепперони">
+                    <span class="pill-emoji"></span>
+                    Пепперони
+                    <span class="pill-price">800 ₽</span>
+                </div>
+                <div class="pill" data-value="Баварская">
+                    <span class="pill-emoji"></span>
+                    Баварская
+                    <span class="pill-price">700 ₽</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="group" id="sizeGroup">
+            <div class="group-title">Выберите размер:</div>
+            <div class="pills">
+                <div class="pill active" data-value="Маленькая">
+                     Маленькая
+                    <span class="pill-price">+100 ₽</span>
+                </div>
+                <div class="pill" data-value="Большая">
+                     Большая
+                    <span class="pill-price">+200 ₽</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="group">
+            <div class="group-title">Добавки по вкусу:</div>
+            <div class="toppings">
+                <label class="topping-label">
+                    <input type="checkbox" value="сливочная моцарелла">
+                    <span class="topping-emoji"></span>
+                    <span class="topping-name">Сливочная моцарелла</span>
+                    <span class="topping-price">+50 ₽</span>
+                </label>
+                <label class="topping-label">
+                    <input type="checkbox" value="сырный борт">
+                    <span class="topping-emoji"></span>
+                    <span class="topping-name">Сырный борт</span>
+                    <span class="topping-price">+150/300 ₽</span>
+                </label>
+                <label class="topping-label">
+                    <input type="checkbox" value="чедер и пармезан">
+                    <span class="topping-emoji"></span>
+                    <span class="topping-name">Чедер и пармезан</span>
+                    <span class="topping-price">+150/300 ₽</span>
+                </label>
+            </div>
+        </div>
+
+        <button class="cart-btn" id="result">
+            Добавить в корзину за 600 ₽ (400 Ккал)
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
