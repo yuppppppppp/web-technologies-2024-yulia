@@ -1,175 +1,122 @@
 <?php
 declare(strict_types=1);
 
-const IMAGE_DIR = __DIR__ . '/uploads/images';
-const THUMB_DIR = __DIR__ . '/uploads/thumbs';
-const IMAGE_URL = 'uploads/images';
-const THUMB_URL = 'uploads/thumbs';
-const MAX_SIZE = 5 * 1024 * 1024;
+const DB_FILE = __DIR__ . '/menu.sqlite';
 
-function makeDir(string $dir): void
+function getConnection(): PDO
 {
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
-    }
+    $pdo = new PDO('sqlite:' . DB_FILE);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS menu_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            parent_id INTEGER NULL,
+            title TEXT NOT NULL,
+            sort_order INTEGER NOT NULL,
+            FOREIGN KEY (parent_id) REFERENCES menu_items(id)
+        )'
+    );
+
+    return $pdo;
 }
 
-function logRequest(): void
+function seedMenu(PDO $pdo): void
 {
-    $logFile = __DIR__ . '/log.txt';
-    file_put_contents($logFile, date('Y-m-d H:i:s') . PHP_EOL, FILE_APPEND | LOCK_EX);
-
-    $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    if ($lines === false || count($lines) < 10) {
+    $count = (int) $pdo->query('SELECT COUNT(*) FROM menu_items')->fetchColumn();
+    if ($count > 0) {
         return;
     }
 
-    $number = 0;
-    while (file_exists(__DIR__ . "/log{$number}.txt")) {
-        $number++;
-    }
+    $items = [
+        ['id' => 1, 'parent_id' => null, 'title' => 'Каталог товаров', 'sort_order' => 1],
+        ['id' => 2, 'parent_id' => 1, 'title' => 'Мойки', 'sort_order' => 1],
+        ['id' => 3, 'parent_id' => 2, 'title' => 'Ulgran', 'sort_order' => 1],
+        ['id' => 4, 'parent_id' => 3, 'title' => 'Smth', 'sort_order' => 1],
+        ['id' => 5, 'parent_id' => 3, 'title' => 'Smth', 'sort_order' => 2],
+        ['id' => 6, 'parent_id' => 2, 'title' => 'Vigro Mramor', 'sort_order' => 2],
+        ['id' => 7, 'parent_id' => 2, 'title' => 'Handmade', 'sort_order' => 3],
+        ['id' => 8, 'parent_id' => 7, 'title' => 'Smth', 'sort_order' => 1],
+        ['id' => 9, 'parent_id' => 7, 'title' => 'Smth', 'sort_order' => 2],
+        ['id' => 10, 'parent_id' => 2, 'title' => 'Vigro Glass', 'sort_order' => 4],
+        ['id' => 11, 'parent_id' => 1, 'title' => 'Фильтры', 'sort_order' => 2],
+        ['id' => 12, 'parent_id' => 11, 'title' => 'Ulgran', 'sort_order' => 1],
+        ['id' => 13, 'parent_id' => 12, 'title' => 'Smth', 'sort_order' => 1],
+        ['id' => 14, 'parent_id' => 12, 'title' => 'Smth', 'sort_order' => 2],
+        ['id' => 15, 'parent_id' => 11, 'title' => 'Vigro Mramor', 'sort_order' => 2],
+    ];
 
-    rename($logFile, __DIR__ . "/log{$number}.txt");
+    $stmt = $pdo->prepare(
+        'INSERT INTO menu_items (id, parent_id, title, sort_order)
+         VALUES (:id, :parent_id, :title, :sort_order)'
+    );
+
+    foreach ($items as $item) {
+        $stmt->execute($item);
+    }
 }
 
-function getImages(string $dir): array
+function getMenuTree(PDO $pdo): array
 {
-    $images = [];
-    foreach (scandir($dir) ?: [] as $file) {
-        $path = $dir . '/' . $file;
-        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $rows = $pdo
+        ->query('SELECT id, parent_id, title FROM menu_items ORDER BY parent_id, sort_order, title')
+        ->fetchAll(PDO::FETCH_ASSOC);
 
-        if (is_file($path) && in_array($ext, ['jpg', 'jpeg', 'png', 'gif'], true)) {
-            $images[] = $file;
+    $tree = [];
+    $items = [];
+
+    foreach ($rows as $row) {
+        $row['children'] = [];
+        $items[(int) $row['id']] = $row;
+    }
+
+    foreach ($items as $id => &$item) {
+        if ($item['parent_id'] === null) {
+            $tree[] = &$item;
+            continue;
+        }
+
+        $parentId = (int) $item['parent_id'];
+        if (isset($items[$parentId])) {
+            $items[$parentId]['children'][] = &$item;
+        }
+    }
+    unset($item);
+
+    return $tree;
+}
+
+function renderMenu(array $items, int $level = 0): string
+{
+    $html = '';
+    $indent = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $level);
+
+    foreach ($items as $item) {
+        $hasChildren = $item['children'] !== [];
+        $childrenId = 'children-' . (int) $item['id'];
+        $title = htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8');
+
+        if ($hasChildren) {
+            $html .= '<div>' . $indent;
+            $html .= '<span onclick="toggleMenu(\'' . $childrenId . '\')">&#128193; ' . $title . '</span>';
+            $html .= '</div>';
+            $html .= '<div id="' . $childrenId . '">' . renderMenu($item['children'], $level + 1) . '</div>';
+        } else {
+            $html .= '<div>' . $indent . '&#128193; ' . $title . '</div>';
         }
     }
 
-    sort($images, SORT_NATURAL | SORT_FLAG_CASE);
-    return $images;
+    return $html;
 }
-
-function resizeImage(string $sourcePath, string $targetPath, string $mime, int $maxWidth, int $maxHeight): bool
-{
-    $size = getimagesize($sourcePath);
-    if ($size === false) {
-        return false;
-    }
-
-    [$width, $height] = $size;
-    $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
-    $newWidth = (int) round($width * $ratio);
-    $newHeight = (int) round($height * $ratio);
-
-    if ($mime === 'image/jpeg') {
-        $source = imagecreatefromjpeg($sourcePath);
-    } elseif ($mime === 'image/png') {
-        $source = imagecreatefrompng($sourcePath);
-    } else {
-        $source = imagecreatefromgif($sourcePath);
-    }
-
-    if ($source === false) {
-        return false;
-    }
-
-    $image = imagecreatetruecolor($newWidth, $newHeight);
-    if ($mime !== 'image/jpeg') {
-        imagealphablending($image, false);
-        imagesavealpha($image, true);
-    }
-
-    imagecopyresampled($image, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-    if ($mime === 'image/jpeg') {
-        $result = imagejpeg($image, $targetPath, 90);
-    } elseif ($mime === 'image/png') {
-        $result = imagepng($image, $targetPath, 6);
-    } else {
-        $result = imagegif($image, $targetPath);
-    }
-
-    imagedestroy($source);
-    imagedestroy($image);
-
-    return $result;
-}
-
-function uploadImage(array $file): string
-{
-
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-        return 'Файл не загрузился :(';
-    }
-
-    if ($file['size'] > MAX_SIZE) {
-        return 'Размер файла должен быть не больше 5 МБ :(';
-    }
-
-    $info = getimagesize($file['tmp_name']);
-    if ($info === false) {
-        return 'Можно загружать только изображения :(';
-    }
-
-    $mime = $info['mime'];
-    $extensions = [
-        'image/jpeg' => 'jpg',
-        'image/png' => 'png',
-        'image/gif' => 'gif',
-    ];
-
-    if (!isset($extensions[$mime])) {
-        return 'Разрешены только JPG, PNG и GIF.';
-    }
-
-    $fileName = uniqid('image_', true) . '.' . $extensions[$mime];
-    $imagePath = IMAGE_DIR . '/' . $fileName;
-    $thumbPath = THUMB_DIR . '/' . $fileName;
-
-    if (!resizeImage($file['tmp_name'], $imagePath, $mime, 1200, 900)) {
-        return 'Не удалось сохранить изображение :(';
-    }
-
-    if (!resizeImage($imagePath, $thumbPath, $mime, 220, 160)) {
-        unlink($imagePath);
-        return 'Не удалось создать миниатюру :(';
-    }
-
-    return '';
-}
-
-function renderGallery(string $dir): string
-{
-    $images = getImages($dir);
-    if ($images === []) {
-        return '<p class="empty">Изображений пока нет</p>';
-    }
-
-    $html = '<div class="gallery">';
-    foreach ($images as $image) {
-        $file = rawurlencode($image);
-        $alt = htmlspecialchars(pathinfo($image, PATHINFO_FILENAME), ENT_QUOTES, 'UTF-8');
-        $bigImage = IMAGE_URL . '/' . $file;
-        $thumb = is_file(THUMB_DIR . '/' . $image) ? THUMB_URL . '/' . $file : $bigImage;
-
-        $html .= '<a class="gallery__item" href="' . $bigImage . '" target="_blank" data-full="' . $bigImage . '">';
-        $html .= '<img src="' . $thumb . '" alt="' . $alt . '" width="220">';
-        $html .= '</a>';
-    }
-
-    return $html . '</div>';
-}
-
-makeDir(IMAGE_DIR);
-makeDir(THUMB_DIR);
-logRequest();
 
 $error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
-    $error = uploadImage($_FILES['image']);
-    if ($error === '') {
-        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
-        exit;
-    }
+$menuTree = [];
+
+try {
+    $pdo = getConnection();
+    seedMenu($pdo);
+    $menuTree = getMenuTree($pdo);
+} catch (Throwable $exception) {
+    $error = 'Не удалось подключиться к базе данных. Проверьте, что в PHP включено расширение SQLite.';
 }
 ?>
 <!doctype html>
@@ -177,62 +124,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лабораторная работа 19</title>
-    <link rel="stylesheet" href="./src/assets/styles/style.css">
+    <title>Практика 20</title>
 </head>
 <body>
-<main class="page">
-    <h1>Фотогалерея человека с отличным вкусом)</h1>
+<main>
+    <h1>Меню каталога</h1>
 
-    <form class="upload-form" action="" method="post" enctype="multipart/form-data">
-        <label for="image">Новое изображение</label>
-        <div class="upload-form__row">
-            <input id="image" type="file" name="image" accept="image/jpeg,image/png,image/gif" required>
-            <button type="submit">Загрузить</button>
-        </div>
-        <p>JPG, PNG или GIF до 5 МБ.</p>
-        <?php if ($error !== ''): ?>
-            <p class="error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
-        <?php endif; ?>
-    </form>
-
-    <?= renderGallery(IMAGE_DIR) ?>
+    <?php if ($error !== ''): ?>
+        <p><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
+    <?php else: ?>
+        <nav aria-label="Каталог товаров">
+            <?= renderMenu($menuTree) ?>
+        </nav>
+    <?php endif; ?>
 </main>
-
-<div class="viewer" id="viewer">
-    <button class="viewer__close" type="button" aria-label="Закрыть">x</button>
-    <img class="viewer__image" src="" alt="">
-</div>
-
 <script>
-    const viewer = document.getElementById('viewer');
-    const viewerImage = viewer.querySelector('.viewer__image');
-    const closeButton = viewer.querySelector('.viewer__close');
-
-    document.querySelectorAll('.gallery__item').forEach((link) => {
-        link.addEventListener('click', (event) => {
-            event.preventDefault();
-            viewerImage.src = link.dataset.full;
-            viewer.classList.add('viewer--open');
-        });
-    });
-
-    function closeViewer() {
-        viewer.classList.remove('viewer--open');
-        viewerImage.src = '';
+    function toggleMenu(id) {
+        const block = document.getElementById(id);
+        block.hidden = !block.hidden;
     }
-
-    closeButton.addEventListener('click', closeViewer);
-    viewer.addEventListener('click', (event) => {
-        if (event.target === viewer) {
-            closeViewer();
-        }
-    });
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            closeViewer();
-        }
-    });
 </script>
 </body>
 </html>
