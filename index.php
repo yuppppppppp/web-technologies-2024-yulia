@@ -1,150 +1,238 @@
 <?php
 declare(strict_types=1);
 
-$pageTitle = 'Лабораторная работа';
+const IMAGE_DIR = __DIR__ . '/uploads/images';
+const THUMB_DIR = __DIR__ . '/uploads/thumbs';
+const IMAGE_URL = 'uploads/images';
+const THUMB_URL = 'uploads/thumbs';
+const MAX_SIZE = 5 * 1024 * 1024;
 
-//Задание 1 Вывод чисел от 0 до 10 через цикл do...while
-function getNumbersDescription(): array
+function makeDir(string $dir): void
 {
-    $result = [];
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+}
+
+function logRequest(): void
+{
+    $logFile = __DIR__ . '/log.txt';
+    file_put_contents($logFile, date('Y-m-d H:i:s') . PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false || count($lines) < 10) {
+        return;
+    }
+
     $number = 0;
-
-    do {
-        if ($number === 0) {
-            $result[] = "{$number} - это ноль.";
-        } elseif ($number % 2 === 0) {
-            $result[] = "{$number} - четное число.";
-        } else {
-            $result[] = "{$number} - нечетное число.";
-        }
+    while (file_exists(__DIR__ . "/log{$number}.txt")) {
         $number++;
-    } while ($number <= 10);
+    }
+
+    rename($logFile, __DIR__ . "/log{$number}.txt");
+}
+
+function getImages(string $dir): array
+{
+    $images = [];
+    foreach (scandir($dir) ?: [] as $file) {
+        $path = $dir . '/' . $file;
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+        if (is_file($path) && in_array($ext, ['jpg', 'jpeg', 'png', 'gif'], true)) {
+            $images[] = $file;
+        }
+    }
+
+    sort($images, SORT_NATURAL | SORT_FLAG_CASE);
+    return $images;
+}
+
+function resizeImage(string $sourcePath, string $targetPath, string $mime, int $maxWidth, int $maxHeight): bool
+{
+    $size = getimagesize($sourcePath);
+    if ($size === false) {
+        return false;
+    }
+
+    [$width, $height] = $size;
+    $ratio = min($maxWidth / $width, $maxHeight / $height, 1);
+    $newWidth = (int) round($width * $ratio);
+    $newHeight = (int) round($height * $ratio);
+
+    if ($mime === 'image/jpeg') {
+        $source = imagecreatefromjpeg($sourcePath);
+    } elseif ($mime === 'image/png') {
+        $source = imagecreatefrompng($sourcePath);
+    } else {
+        $source = imagecreatefromgif($sourcePath);
+    }
+
+    if ($source === false) {
+        return false;
+    }
+
+    $image = imagecreatetruecolor($newWidth, $newHeight);
+    if ($mime !== 'image/jpeg') {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+    }
+
+    imagecopyresampled($image, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+    if ($mime === 'image/jpeg') {
+        $result = imagejpeg($image, $targetPath, 90);
+    } elseif ($mime === 'image/png') {
+        $result = imagepng($image, $targetPath, 6);
+    } else {
+        $result = imagegif($image, $targetPath);
+    }
+
+    imagedestroy($source);
+    imagedestroy($image);
+
     return $result;
 }
 
-//Задание 2 Массив областей и городов
-$regions = [
-    'Московская область' => ['Москва', 'Зеленоград', 'Клин', 'Коломна', 'Красногорск'],
-    'Ленинградская область' => ['Санкт-Петербург', 'Всеволожск', 'Павловск', 'Кронштадт'],
-    'Рязанская область' => ['Рязань', 'Касимов', 'Скопин', 'Сасово', 'Кораблино'],
-];
-
-//Задание 3 Функция транслитерации строк
-function transliterate(string $text): string
+function uploadImage(array $file): string
 {
-    $letters = [
-        'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd',
-        'е' => 'e', 'ё' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i',
-        'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n',
-        'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't',
-        'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'ts', 'ч' => 'ch',
-        'ш' => 'sh', 'щ' => 'sch', 'ъ' => '', 'ы' => 'y', 'ь' => '',
-        'э' => 'e', 'ю' => 'yu', 'я' => 'ya',
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return 'Файл не загрузился :(';
+    }
+
+    if ($file['size'] > MAX_SIZE) {
+        return 'Размер файла должен быть не больше 5 МБ :(';
+    }
+
+    $info = getimagesize($file['tmp_name']);
+    if ($info === false) {
+        return 'Можно загружать только изображения :(';
+    }
+
+    $mime = $info['mime'];
+    $extensions = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
     ];
-    return strtr($text, $letters);
-}
 
-//Задание 4 Динамическое меню с вложенными подменю
-$menu = [
-    ['title' => 'Главная', 'url' => '#task-1'],
-    ['title' => 'Задания', 'url' => '#', 'children' => [
-        ['title' => 'Числа', 'url' => '#task-1'],
-        ['title' => 'Области', 'url' => '#task-2'],
-        ['title' => 'Транслитерация', 'url' => '#task-3'],
-        ['title' => 'Города на К', 'url' => '#task-6'],
-    ]],
-    ['title' => 'Контакты', 'url' => '#contacts'],
-];
-
-//Задание 5 Рендер меню через простой движок из функции
-function renderMenu(array $items): string
-{
-    $html = '<ul class="menu">';
-
-    foreach ($items as $item) {
-        $title = htmlspecialchars($item['title'], ENT_QUOTES, 'UTF-8');
-        $url = htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8');
-
-        $html .= '<li>';
-        $html .= "<a href=\"{$url}\">{$title}</a>";
-
-        if (!empty($item['children'])) {
-            $html .= renderMenu($item['children']);
-        }
-        $html .= '</li>';
+    if (!isset($extensions[$mime])) {
+        return 'Разрешены только JPG, PNG и GIF.';
     }
-    return $html . '</ul>';
-}
 
-//Задание 6 Вывод городов, начинающихся с буквы К
-function getCitiesByFirstLetter(array $regions, string $letter): array
-{
-    $result = [];
+    $fileName = uniqid('image_', true) . '.' . $extensions[$mime];
+    $imagePath = IMAGE_DIR . '/' . $fileName;
+    $thumbPath = THUMB_DIR . '/' . $fileName;
 
-    foreach ($regions as $region => $cities) {
-        foreach ($cities as $city) {
-            if (strpos($city, $letter) === 0) {
-                $result[$region][] = $city;
-            }
-        }
+    if (!resizeImage($file['tmp_name'], $imagePath, $mime, 1200, 900)) {
+        return 'Не удалось сохранить изображение :(';
     }
-    return $result;
+
+    if (!resizeImage($imagePath, $thumbPath, $mime, 220, 160)) {
+        unlink($imagePath);
+        return 'Не удалось создать миниатюру :(';
+    }
+
+    return '';
 }
 
-$citiesWithK = getCitiesByFirstLetter($regions, 'К');
-$transliterationText = 'Лабораторая работа';
+function renderGallery(string $dir): string
+{
+    $images = getImages($dir);
+    if ($images === []) {
+        return '<p class="empty">Изображений пока нет</p>';
+    }
+
+    $html = '<div class="gallery">';
+    foreach ($images as $image) {
+        $file = rawurlencode($image);
+        $alt = htmlspecialchars(pathinfo($image, PATHINFO_FILENAME), ENT_QUOTES, 'UTF-8');
+        $bigImage = IMAGE_URL . '/' . $file;
+        $thumb = is_file(THUMB_DIR . '/' . $image) ? THUMB_URL . '/' . $file : $bigImage;
+
+        $html .= '<a class="gallery__item" href="' . $bigImage . '" target="_blank" data-full="' . $bigImage . '">';
+        $html .= '<img src="' . $thumb . '" alt="' . $alt . '" width="220">';
+        $html .= '</a>';
+    }
+
+    return $html . '</div>';
+}
+
+makeDir(IMAGE_DIR);
+makeDir(THUMB_DIR);
+logRequest();
+
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['image'])) {
+    $error = uploadImage($_FILES['image']);
+    if ($error === '') {
+        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+        exit;
+    }
+}
 ?>
 <!doctype html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></title>
+    <title>Лабораторная работа 19</title>
     <link rel="stylesheet" href="./src/assets/styles/style.css">
 </head>
 <body>
-<header class="header">
-    <nav class="nav">
-        <?= renderMenu($menu) ?>
-    </nav>
-</header>
+<main class="page">
+    <h1>Фотогалерея человека с отличным вкусом)</h1>
 
-<main class="main">
-    <h1><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></h1>
+    <form class="upload-form" action="" method="post" enctype="multipart/form-data">
+        <label for="image">Новое изображение</label>
+        <div class="upload-form__row">
+            <input id="image" type="file" name="image" accept="image/jpeg,image/png,image/gif" required>
+            <button type="submit">Загрузить</button>
+        </div>
+        <p>JPG, PNG или GIF до 5 МБ.</p>
+        <?php if ($error !== ''): ?>
+            <p class="error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
+        <?php endif; ?>
+    </form>
 
-    <section id="task-1" class="task">
-        <h2>Задание 1</h2>
-        <?php foreach (getNumbersDescription() as $line): ?>
-            <p><?= htmlspecialchars($line, ENT_QUOTES, 'UTF-8') ?></p>
-        <?php endforeach; ?>
-    </section>
-
-    <section id="task-2" class="task">
-        <h2>Задание 2</h2>
-        <?php foreach ($regions as $region => $cities): ?>
-            <h3><?= htmlspecialchars($region, ENT_QUOTES, 'UTF-8') ?>:</h3>
-            <p><?= htmlspecialchars(implode(', ', $cities), ENT_QUOTES, 'UTF-8') ?>.</p>
-        <?php endforeach; ?>
-    </section>
-
-    <section id="task-3" class="task">
-        <h2>Задание 3</h2>
-        <p>Исходная строка: <?= htmlspecialchars($transliterationText, ENT_QUOTES, 'UTF-8') ?></p>
-        <p>Результат: <?= htmlspecialchars(transliterate($transliterationText), ENT_QUOTES, 'UTF-8') ?></p>
-    </section>
-
-    <section id="task-4" class="task">
-        <h2>Задания 4 и 5</h2>
-        <p>Меню сверху страницы сформировано из массива и выведено функцией renderMenu</p>
-    </section>
-
-    <section id="task-6" class="task">
-        <h2>Задание 6</h2>
-        <?php foreach ($citiesWithK as $region => $cities): ?>
-            <h3><?= htmlspecialchars($region, ENT_QUOTES, 'UTF-8') ?>:</h3>
-            <p><?= htmlspecialchars(implode(', ', $cities), ENT_QUOTES, 'UTF-8') ?>.</p>
-        <?php endforeach; ?>
-    </section>
+    <?= renderGallery(IMAGE_DIR) ?>
 </main>
+
+<div class="viewer" id="viewer">
+    <button class="viewer__close" type="button" aria-label="Закрыть">x</button>
+    <img class="viewer__image" src="" alt="">
+</div>
+
+<script>
+    const viewer = document.getElementById('viewer');
+    const viewerImage = viewer.querySelector('.viewer__image');
+    const closeButton = viewer.querySelector('.viewer__close');
+
+    document.querySelectorAll('.gallery__item').forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            viewerImage.src = link.dataset.full;
+            viewer.classList.add('viewer--open');
+        });
+    });
+
+    function closeViewer() {
+        viewer.classList.remove('viewer--open');
+        viewerImage.src = '';
+    }
+
+    closeButton.addEventListener('click', closeViewer);
+    viewer.addEventListener('click', (event) => {
+        if (event.target === viewer) {
+            closeViewer();
+        }
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeViewer();
+        }
+    });
+</script>
 </body>
 </html>
