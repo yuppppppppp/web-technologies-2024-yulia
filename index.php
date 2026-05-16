@@ -128,8 +128,6 @@ try {
 </head>
 <body>
 <main>
-    <h1>Меню каталога</h1>
-
     <?php if ($error !== ''): ?>
         <p><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
     <?php else: ?>
